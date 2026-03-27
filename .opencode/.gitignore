@@ -1,0 +1,7 @@
+# Generated/skilled assets - these are outputs, not source
+# Uncomment if you want to exclude generated content:
+# skills/generated/
+# agents/generated/
+
+# Keep progress synced
+!.gitkeep
