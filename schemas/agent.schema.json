@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://opencode.ai/schemas/agent.schema.json",
+  "title": "Agent Definition",
+  "description": "Schema for OpenCode/Claude Code compatible agent definition",
+  "type": "object",
+  "required": ["name", "description"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "maxLength": 64,
+      "description": "Unique agent identifier"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1024,
+      "description": "When to use this agent and what it does"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["explorer", "planner", "general", "custom"],
+      "default": "general",
+      "description": "Agent type for capability selection"
+    },
+    "allowed-tools": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["Read", "Grep", "Glob", "Bash", "Edit", "Write", "WebFetch", "WebSearch", "TodoWrite", "Task"]
+      },
+      "description": "Tools this agent can use"
+    },
+    "model": {
+      "type": "string",
+      "enum": ["opus", "sonnet", "haiku", "claude-3-5-sonnet", "claude-3-opus"],
+      "description": "Model to use for this agent"
+    },
+    "color": {
+      "type": "string",
+      "enum": ["red", "orange", "yellow", "green", "blue", "purple"],
+      "description": "Visual identifier color"
+    },
+    "system-prompt": {
+      "type": "string",
+      "description": "Optional custom system prompt override"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of agent capabilities"
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Operational constraints"
+    },
+    "auto-trigger": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "patterns": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "require-consent": { "type": "boolean", "default": true }
+      }
+    }
+  },
+  "additionalProperties": false
+}

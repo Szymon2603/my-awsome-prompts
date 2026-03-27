@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://opencode.ai/schemas/brief.schema.json",
+  "title": "Brief Definition",
+  "description": "Schema for task brief - the input to generators",
+  "type": "object",
+  "required": ["name", "goal"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Brief identifier/name"
+    },
+    "goal": {
+      "type": "string",
+      "maxLength": 2000,
+      "description": "Main objective of the task"
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Technical or functional constraints"
+    },
+    "context": {
+      "type": "string",
+      "maxLength": 5000,
+      "description": "Background context and domain knowledge"
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "input": { "type": "string" },
+          "output": { "type": "string" }
+        }
+      },
+      "description": "Example inputs and expected outputs"
+    },
+    "target": {
+      "type": "string",
+      "enum": ["prompt", "skill", "agent", "any"],
+      "default": "any",
+      "description": "What type of artifact to generate"
+    },
+    "style": {
+      "type": "string",
+      "enum": ["technical", "casual", "formal", "minimal"],
+      "default": "technical",
+      "description": "Preferred tone and style"
+    },
+    "complexity": {
+      "type": "string",
+      "enum": ["simple", "moderate", "complex"],
+      "default": "moderate",
+      "description": "Estimated task complexity"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Technical domain (e.g., 'code-review', 'documentation')"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Additional metadata"
+    }
+  },
+  "additionalProperties": false
+}

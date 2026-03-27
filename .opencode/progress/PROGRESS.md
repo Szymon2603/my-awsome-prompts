@@ -1,10 +1,10 @@
 # Progress Tracker - Prompt & Skill Generator
 
-## Overall Progress: 0%
+## Overall Progress: 20%
 
 | Phase | Nazwa | Progress | Status |
 |-------|-------|----------|--------|
-| 1 | Fundamenty | 0% | ⬜ Not Started |
+| 1 | Fundamenty | 100% | ✅ Completed |
 | 2 | Core Generatory | 0% | ⬜ Not Started |
 | 3 | Integracja OpenCode | 0% | ⬜ Not Started |
 | 4 | Zaawansowany Instalator | 0% | ⬜ Not Started |
@@ -12,30 +12,30 @@
 
 ---
 
-## Phase 1: Fundamenty - 0%
+## Phase 1: Fundamenty - 100% ✅
 
 | Task | Status | Notes |
 |------|--------|-------|
-| M1.1 Schematy JSON | ⬜ | - |
-| M1.2 Generator Promptów v1 | ⬜ | - |
-| M1.3 Pipeline Brief→Prompt | ⬜ | - |
+| M1.1 Schematy JSON | ✅ | 3 schemas + validation + 9 tests |
+| M1.2 Generator Promptów v1 | ✅ | 4 prompt types, 6 domains, Handlebars templates |
+| M1.3 Pipeline Brief→Prompt | ✅ | Pipeline class with history + refinement |
 
 ### Subtasks M1.1
-- [ ] T1.1.1 skill.schema.json
-- [ ] T1.1.2 agent.schema.json
-- [ ] T1.1.3 brief.schema.json
-- [ ] T1.1.4 ajv validation setup
-- [ ] T1.1.5 schema tests
+- [x] T1.1.1 skill.schema.json
+- [x] T1.1.2 agent.schema.json
+- [x] T1.1.3 brief.schema.json
+- [x] T1.1.4 ajv validation setup
+- [x] T1.1.5 schema tests (9 passed)
 
 ### Subtasks M1.2
-- [ ] T1.2.1 Prompt types defined
-- [ ] T1.2.2 Base templates created
-- [ ] T1.2.3 GeneratorPrompt class
-- [ ] T1.2.4 Parameter validation
+- [x] T1.2.1 Prompt types defined
+- [x] T1.2.2 Base templates created
+- [x] T1.2.3 GeneratorPrompt class
+- [x] T1.2.4 Parameter validation
 
 ### Subtasks M1.3
-- [ ] T1.3.1 Pipeline class
-- [ ] T1.3.2 Error handling
+- [x] T1.3.1 Pipeline class
+- [x] T1.3.2 Error handling
 
 ---
 
@@ -98,7 +98,7 @@
 
 ## Current Focus
 
-**Aktualny cel:** Planning completed - ready for Phase 1
+**Aktualny cel:** Phase 1 completed - ready for Phase 2
 
 ---
 
@@ -107,3 +107,4 @@
 | Date | Action | Details |
 |------|--------|---------|
 | 2026-03-27 | Project created | Initial planning documents created |
+| 2026-03-27 | Phase 1 completed | Schemas, GeneratorPrompt, Pipeline - all tests passing |

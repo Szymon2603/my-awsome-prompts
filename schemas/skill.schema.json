@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://opencode.ai/schemas/skill.schema.json",
+  "title": "Skill Definition",
+  "description": "Schema for OpenCode/Claude Code compatible skill definition",
+  "type": "object",
+  "required": ["name", "description"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "maxLength": 64,
+      "description": "Unique skill identifier (lowercase, hyphens only)"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1024,
+      "description": "What the skill does and when to use it"
+    },
+    "argument-hint": {
+      "type": "string",
+      "description": "Hint for autocomplete, e.g., '[filename] [format]'"
+    },
+    "disable-model-invocation": {
+      "type": "boolean",
+      "default": false,
+      "description": "If true, only manual invocation via /skill-name"
+    },
+    "user-invocable": {
+      "type": "boolean",
+      "default": true,
+      "description": "If false, hidden from / menu"
+    },
+    "allowed-tools": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["Read", "Grep", "Glob", "Bash", "Edit", "Write", "WebFetch", "WebSearch"]
+      },
+      "description": "Tools this skill can use"
+    },
+    "model": {
+      "type": "string",
+      "enum": ["opus", "sonnet", "haiku", "claude-3-5-sonnet", "claude-3-opus"],
+      "description": "Model to use for this skill"
+    },
+    "effort": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "max"],
+      "default": "medium",
+      "description": "Estimated effort level"
+    },
+    "context": {
+      "type": "string",
+      "enum": ["fork", "inline"],
+      "default": "inline",
+      "description": "Run in isolated subagent or inline"
+    },
+    "agent": {
+      "type": "string",
+      "enum": ["Explore", "Plan", "general"],
+      "description": "Subagent type when context: fork"
+    },
+    "paths": {
+      "type": "string",
+      "description": "Glob patterns for auto-activation, e.g., 'src/**/*.ts'"
+    },
+    "shell": {
+      "type": "string",
+      "enum": ["bash", "powershell"],
+      "default": "bash"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Required packages, e.g., ['python>=3.8', 'pandas>=1.5']"
+    },
+    "hooks": {
+      "type": "object",
+      "properties": {
+        "pre": { "type": "string" },
+        "post": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,17 @@
+{
+  "name": "prompt-skill-generator",
+  "version": "0.1.0",
+  "description": "Generator for prompts, skills, and agents",
+  "main": "validate.js",
+  "scripts": {
+    "test": "node tests/validate.test.js",
+    "validate:skill": "node -e \"const v = require('./validate'); console.log(v.validateSkill(JSON.parse(require('fs').readFileSync(process.argv[2]))))\"",
+    "validate:agent": "node -e \"const v = require('./validate'); console.log(v.validateAgent(JSON.parse(require('fs').readFileSync(process.argv[2]))))\"",
+    "validate:brief": "node -e \"const v = require('./validate'); console.log(v.validateBrief(JSON.parse(require('fs').readFileSync(process.argv[2]))))\""
+  },
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
+    "handlebars": "^4.7.9"
+  }
+}
