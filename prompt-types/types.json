@@ -1,0 +1,68 @@
+{
+  "types": {
+    "system_prompt": {
+      "name": "System Prompt",
+      "description": "Defines AI behavior, persona, and guidelines",
+      "fields": ["persona", "guidelines", "constraints", "capabilities"]
+    },
+    "user_prompt": {
+      "name": "User Prompt",
+      "description": "Task instruction for user input",
+      "fields": ["task", "context", "format", "examples"]
+    },
+    "few_shot": {
+      "name": "Few-Shot Example",
+      "description": "Input-output examples for training",
+      "fields": ["input", "output", "explanation"]
+    },
+    "chain_of_thought": {
+      "name": "Chain of Thought",
+      "description": "Step-by-step reasoning template",
+      "fields": ["steps", "reasoning", "conclusion"]
+    }
+  },
+  "domains": {
+    "code_review": {
+      "name": "Code Review",
+      "focus": ["security", "performance", "best practices"]
+    },
+    "documentation": {
+      "name": "Documentation",
+      "focus": ["clarity", "completeness", "examples"]
+    },
+    "testing": {
+      "name": "Testing",
+      "focus": ["coverage", "edge cases", "assertions"]
+    },
+    "refactoring": {
+      "name": "Refactoring",
+      "focus": ["clean code", "maintainability", "performance"]
+    },
+    "debugging": {
+      "name": "Debugging",
+      "focus": ["root cause", "fixes", "prevention"]
+    },
+    "general": {
+      "name": "General",
+      "focus": ["clarity", "actionability"]
+    }
+  },
+  "styles": {
+    "technical": {
+      "name": "Technical",
+      "tone": "precise, detailed, code-focused"
+    },
+    "casual": {
+      "name": "Casual",
+      "tone": "friendly, conversational"
+    },
+    "formal": {
+      "name": "Formal",
+      "tone": "professional, structured"
+    },
+    "minimal": {
+      "name": "Minimal",
+      "tone": "concise, to-the-point"
+    }
+  }
+}
