@@ -27,5 +27,10 @@ Thumbs.db
 .env
 .env.local
 
-# Lock files (optional - keep if needed)
-# package-lock.json
+# Package managers lock files
+bun.lock
+bun.lockb
+
+# Package manager configs in .opencode
+.opencode/*.lock
+!.opencode/.gitkeep
