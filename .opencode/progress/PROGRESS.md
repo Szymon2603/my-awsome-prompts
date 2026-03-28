@@ -1,12 +1,12 @@
 # Progress Tracker - Prompt & Skill Generator
 
-## Overall Progress: 40%
+## Overall Progress: 60%
 
 | Phase | Nazwa | Progress | Status |
 |-------|-------|----------|--------|
 | 1 | Fundamenty | 100% | ✅ Completed |
 | 2 | Core Generatory | 100% | ✅ Completed |
-| 3 | Integracja OpenCode | 0% | ⬜ Not Started |
+| 3 | Integracja OpenCode | 100% | ✅ Completed |
 | 4 | Zaawansowany Instalator | 0% | ⬜ Not Started |
 | 5 | Optymalizacja & Docs | 0% | ⬜ Not Started |
 
@@ -65,14 +65,14 @@
 
 ---
 
-## Phase 3: Integracja OpenCode - 0%
+## Phase 3: Integracja OpenCode - 100% ✅
 
 | Task | Status | Notes |
 |------|--------|-------|
-| M3.1 Skill /generate-prompt | ⬜ | - |
-| M3.2 Skill /generate-skill | ⬜ | - |
-| M3.3 Skill /generate-agent | ⬜ | - |
-| M3.4 Agent auto-trigger | ⬜ | - |
+| M3.1 Skill /generate-prompt | ✅ | Skill for generating prompts from brief |
+| M3.2 Skill /generate-skill | ✅ | Skill for generating skills from prompts |
+| M3.3 Skill /generate-agent | ✅ | Skill for generating agents from skills |
+| M3.4 Agent auto-trigger | ✅ | Brief-detector agent with auto-trigger patterns |
 
 ---
 
@@ -98,7 +98,7 @@
 
 ## Current Focus
 
-**Aktualny cel:** Phase 2 completed - ready for Phase 3
+**Aktualny cel:** Phase 3 completed - ready for Phase 4
 
 ---
 
@@ -109,3 +109,4 @@
 | 2026-03-27 | Project created | Initial planning documents created |
 | 2026-03-27 | Phase 1 completed | Schemas, GeneratorPrompt, Pipeline - all tests passing |
 | 2026-03-27 | Phase 2 completed | GeneratorSkill, GeneratorAgent, full test suite |
+| 2026-03-27 | Phase 3 completed | Skills: /generate-prompt, /generate-skill, /generate-agent + brief-detector agent |
