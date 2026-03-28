@@ -1,11 +1,11 @@
 # Progress Tracker - Prompt & Skill Generator
 
-## Overall Progress: 20%
+## Overall Progress: 40%
 
 | Phase | Nazwa | Progress | Status |
 |-------|-------|----------|--------|
 | 1 | Fundamenty | 100% | ✅ Completed |
-| 2 | Core Generatory | 0% | ⬜ Not Started |
+| 2 | Core Generatory | 100% | ✅ Completed |
 | 3 | Integracja OpenCode | 0% | ⬜ Not Started |
 | 4 | Zaawansowany Instalator | 0% | ⬜ Not Started |
 | 5 | Optymalizacja & Docs | 0% | ⬜ Not Started |
@@ -39,29 +39,29 @@
 
 ---
 
-## Phase 2: Core Generatory - 0%
+## Phase 2: Core Generatory - 100% ✅
 
 | Task | Status | Notes |
 |------|--------|-------|
-| M2.1 Generator Skilli v1 | ⬜ | - |
-| M2.2 Generator Agentów v1 | ⬜ | - |
-| M2.3 Walidacja + testy | ⬜ | - |
+| M2.1 Generator Skilli v1 | ✅ | Tool detection, instruction scaffolding, resource templates |
+| M2.2 Generator Agentów v1 | ✅ | Auto-type selection, 4 agent types (explorer, planner, general, custom) |
+| M2.3 Walidacja + testy | ✅ | Full test suite + integration tests |
 
 ### Subtasks M2.1
-- [ ] T2.1.1 GeneratorSkill class
-- [ ] T2.1.2 Tool detection
-- [ ] T2.1.3 Instruction scaffolding
-- [ ] T2.1.4 Resource file generation
+- [x] T2.1.1 GeneratorSkill class
+- [x] T2.1.2 Tool detection
+- [x] T2.1.3 Instruction scaffolding
+- [x] T2.1.4 Resource file generation
 
 ### Subtasks M2.2
-- [ ] T2.2.1 GeneratorAgent class
-- [ ] T2.2.2 Type selection
-- [ ] T2.2.3 System prompt generation
+- [x] T2.2.1 GeneratorAgent class
+- [x] T2.2.2 Type selection
+- [x] T2.2.3 System prompt generation
 
 ### Subtasks M2.3
-- [ ] T2.3.1 Test suite
-- [ ] T2.3.2 JSON Schema validation
-- [ ] T2.3.3 Test runner
+- [x] T2.3.1 Test suite
+- [x] T2.3.2 JSON Schema validation
+- [x] T2.3.3 Test runner
 
 ---
 
@@ -98,7 +98,7 @@
 
 ## Current Focus
 
-**Aktualny cel:** Phase 1 completed - ready for Phase 2
+**Aktualny cel:** Phase 2 completed - ready for Phase 3
 
 ---
 
@@ -108,3 +108,4 @@
 |------|--------|---------|
 | 2026-03-27 | Project created | Initial planning documents created |
 | 2026-03-27 | Phase 1 completed | Schemas, GeneratorPrompt, Pipeline - all tests passing |
+| 2026-03-27 | Phase 2 completed | GeneratorSkill, GeneratorAgent, full test suite |
