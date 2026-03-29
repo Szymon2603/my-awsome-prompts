@@ -1,0 +1,14 @@
+{
+  "name": "test-generator",
+  "goal": "Generate comprehensive unit tests",
+  "constraints": [
+    "Jest framework",
+    "Test edge cases",
+    "Mock external dependencies",
+    "Include setup/teardown"
+  ],
+  "context": {
+    "domain": "testing",
+    "framework": "jest"
+  }
+}

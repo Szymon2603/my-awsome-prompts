@@ -1,0 +1,20 @@
+{
+  "name": "code-reviewer",
+  "goal": "Review code for security vulnerabilities",
+  "constraints": [
+    "Focus on OWASP Top 10",
+    "Node.js and JavaScript focus",
+    "Provide actionable fixes"
+  ],
+  "context": {
+    "domain": "security",
+    "language": "JavaScript",
+    "framework": "express"
+  },
+  "examples": [
+    {
+      "input": "const query = 'SELECT * FROM users WHERE id = ' + req.params.id",
+      "issue": "SQL Injection vulnerability"
+    }
+  ]
+}

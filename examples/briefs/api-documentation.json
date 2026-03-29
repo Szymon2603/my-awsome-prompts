@@ -1,0 +1,13 @@
+{
+  "name": "api-documentation",
+  "goal": "Generate clear API documentation from code",
+  "constraints": [
+    "OpenAPI 3.0 format",
+    "Include request/response examples",
+    "Document error codes"
+  ],
+  "context": {
+    "domain": "documentation",
+    "format": "markdown"
+  }
+}
