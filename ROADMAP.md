@@ -59,9 +59,9 @@
 
 | Milestone | Opis | Status |
 |-----------|------|--------|
-| M5.1 | Iteracje feedback loop | ⬜ |
-| M5.2 | Dokumentacja użytkownika | ⬜ |
-| M5.3 | Przykłady użycia | ⬜ |
+| M5.1 | Iteracje feedback loop | ✅ QualityMetrics.js |
+| M5.2 | Dokumentacja użytkownika | ✅ README.md |
+| M5.3 | Przykłady użycia | ✅ examples/ |
 
 ---
 
