@@ -268,8 +268,8 @@ class GeneratorSkill {
   validateFull(skillPath) {
     const results = {
       schema: { valid: false, errors: [] },
-      structure: { valid: false, errors: [] },
-      tools: { valid: false, warnings: [] }
+      structure: { valid: false, errors: [], warnings: [] },
+      tools: { valid: true, warnings: [] }
     };
 
     const skillFile = path.join(skillPath, 'SKILL.md');
@@ -314,13 +314,18 @@ class GeneratorSkill {
     }
 
     const validTools = ['Read', 'Grep', 'Glob', 'Bash', 'Edit', 'Write', 'WebFetch', 'WebSearch'];
-    for (const tool of frontmatter['allowed-tools'] || []) {
-      if (!validTools.includes(tool)) {
-        results.tools.warnings.push(`Unknown tool: ${tool}`);
+    const tools = frontmatter['allowed-tools'] || frontmatter['allowed_tools'] || [];
+    if (Array.isArray(tools)) {
+      for (const tool of tools) {
+        if (!validTools.includes(tool)) {
+          if (!results.tools.warnings) results.tools.warnings = [];
+          results.tools.warnings.push(`Unknown tool: ${tool}`);
+        }
       }
     }
 
     results.structure.valid = results.structure.errors.length === 0;
+    if (!results.tools.warnings) results.tools.warnings = [];
     results.tools.valid = results.tools.warnings.length === 0;
 
     return results;
@@ -337,25 +342,24 @@ class GeneratorSkill {
       
       if (trimmed.startsWith('- ') && currentKey) {
         currentArray.push(trimmed.substring(2).trim());
-      } else if (trimmed.match(/^(\w+):/)) {
-        if (currentKey) {
-          result[currentKey] = currentArray.length > 0 ? currentArray : result[currentKey];
+      } else if (trimmed.match(/^(\S+):/)) {
+        if (currentKey && currentArray.length > 0) {
+          result[currentKey] = [...currentArray];
+          currentArray = [];
         }
-        const match = trimmed.match(/^(\w+):\s*(.*)$/);
+        const match = trimmed.match(/^(\S+):\s*(.*)$/);
         currentKey = match[1];
         const value = match[2].trim();
         
         if (value && !value.startsWith('[')) {
           result[currentKey] = value;
           currentKey = null;
-        } else {
-          currentArray = [];
         }
       }
     }
 
-    if (currentKey) {
-      result[currentKey] = currentArray.length > 0 ? currentArray : result[currentKey];
+    if (currentKey && currentArray.length > 0) {
+      result[currentKey] = currentArray;
     }
 
     return result;
@@ -385,7 +389,7 @@ class GeneratorSkill {
     results.tests.push({
       name: 'Tool Configuration',
       passed: validationResults.tools.valid,
-      message: validationResults.tools.valid ? 'All tools valid' : validationResults.tools.warnings.join(', ')
+      message: validationResults.tools.valid ? 'All tools valid' : (validationResults.tools.warnings || []).join(', ')
     });
 
     results.summary.total = results.tests.length;
