@@ -1,6 +1,6 @@
 # Epic: Artifact Architect
 
-## Status: Planowany
+## Status: ✅ Zakończony
 
 ## Cel
 
@@ -10,37 +10,37 @@ Agent master obsługujący pełny cykl tworzenia skills, agents i prompts w Open
 
 ### Faza 1: Zbieranie Wymagań
 
-- [ ] Agent zadaje pytania o cel artefaktu
-- [ ] Pyta o narzędzia (tools) jakie mają być dostępne
-- [ ] Pyta o typ (dla agent: explorer/planner/general)
-- [ ] Pyta o ograniczenia i constraints
-- [ ] Pyta o styl (dla prompt: technical/casual/formal)
-- [ ] Pyta o domenę (code_review, documentation, testing, etc.)
+- [x] Agent zadaje pytania o cel artefaktu
+- [x] Pyta o narzędzia (tools) jakie mają być dostępne
+- [x] Pyta o typ (dla agent: explorer/planner/general)
+- [x] Pyta o ograniczenia i constraints
+- [x] Pyta o styl (dla prompt: technical/casual/formal)
+- [x] Pyta o domenę (code_review, documentation, testing, etc.)
 
 ### Faza 2: Plan
 
-- [ ] Generuje brief na podstawie odpowiedzi
-- [ ] Prezentuje plan przed budowaniem
-- [ ] Czeka na akceptację użytkownika
-- [ ] Oferuje modyfikację planu
+- [x] Generuje brief na podstawie odpowiedzi
+- [x] Prezentuje plan przed budowaniem
+- [x] Czeka na akceptację użytkownika
+- [x] Oferuje modyfikację planu
 
 ### Faza 3: Budowanie
 
-- [ ] Używa GeneratorSkill.js do tworzenia skill
-- [ ] Używa GeneratorAgent.js do tworzenia agent
-- [ ] Używa GeneratorPrompt.js do tworzenia prompt
-- [ ] Zapisuje do `.opencode/generated/{type}/{name}/`
+- [x] Używa GeneratorSkill.js do tworzenia skill
+- [x] Używa GeneratorAgent.js do tworzenia agent
+- [x] Używa GeneratorPrompt.js do tworzenia prompt
+- [x] Zapisuje do `.opencode/generated/{type}/{name}/`
 
 ### Faza 4: Testowanie i Walidacja
 
-- [ ] Uruchamia walidację JSON Schema
-- [ ] Uruchamia testy jednostkowe z /tests/
-- [ ] Prezentuje wyniki testów
+- [x] Uruchamia walidację JSON Schema
+- [x] Uruchamia testy jednostkowe z /tests/
+- [x] Prezentuje wyniki testów
 
 ### Faza 5: Instalacja
 
-- [ ] Prezentuje wygenerowany artefakt
-- [ ] Oferuje instalację interaktywną:
+- [x] Prezentuje wygenerowany artefakt
+- [x] Oferuje instalację interaktywną:
   - Global (~/.opencode/)
   - Lokal (w bieżącym projekcie)
   - Własna ścieżka
@@ -72,4 +72,4 @@ Agent master obsługujący pełny cykl tworzenia skills, agents i prompts w Open
 - Schemas (skill.schema.json, agent.schema.json)
 - Test scripts
 
-## Status: Planowany
+## Status: ✅ Zakończony
