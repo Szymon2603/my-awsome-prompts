@@ -17,6 +17,7 @@ NC='\033[0m'
 info() { echo -e "${GREEN}[INFO]${NC} $1"; }
 warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 error() { echo -e "${RED}[ERROR]${NC} $1"; }
+success() { echo -e "${GREEN}[✓]${NC} $1"; }
 
 usage() {
   cat << EOF
@@ -106,10 +107,54 @@ merge_config() {
   fi
 }
 
+ask_destination() {
+  local type="$1"
+  
+  echo ""
+  echo "Where to install?"
+  echo "  1) Global (~/.opencode/${type}s/)"
+  echo "  2) Local (in current project .opencode/)"
+  echo "  3) Custom path"
+  echo ""
+  echo -n "Select option [1]: "
+  
+  read -r choice
+  choice="${choice:-1}"
+  
+  case $choice in
+    1)
+      if [ "$type" = "skill" ]; then
+        echo "$SKILLS_DIR"
+      else
+        echo "$AGENTS_DIR"
+      fi
+      ;;
+    2)
+      if [ "$type" = "skill" ]; then
+        echo "$PROJECT_ROOT/.opencode/skills"
+      else
+        echo "$PROJECT_ROOT/.opencode/agents"
+      fi
+      ;;
+    3)
+      echo -n "Enter custom path: "
+      read -r custom_path
+      echo "$custom_path"
+      ;;
+    *)
+      if [ "$type" = "skill" ]; then
+        echo "$SKILLS_DIR"
+      else
+        echo "$AGENTS_DIR"
+      fi
+      ;;
+  esac
+}
+
 install_skill() {
   local name="$1"
   local source="$GENERATED_DIR/skills/$name"
-  local dest="$SKILLS_DIR/$name"
+  local dest_dir
   
   if [ ! -d "$source" ]; then
     error "Skill '$name' not found"
@@ -120,6 +165,14 @@ install_skill() {
   
   info "Installing skill: $name"
   echo "  Source: $source"
+  
+  if [ "$INTERACTIVE" = "true" ]; then
+    dest_dir=$(ask_destination "skill")
+  else
+    dest_dir="$SKILLS_DIR"
+  fi
+  
+  local dest="$dest_dir/$name"
   echo "  Destination: $dest"
   
   if [ -d "$dest" ] && [ "$FORCE" != "true" ]; then
@@ -152,7 +205,7 @@ install_skill() {
   rm -rf "$dest"
   cp -r "$source" "$dest"
   
-  info "✓ Skill '$name' installed successfully"
+  success "Skill '$name' installed to $dest_dir"
   
   if [ -f "$dest/SKILL.md" ]; then
     check_dependencies "$dest"
@@ -162,7 +215,7 @@ install_skill() {
 install_agent() {
   local name="$1"
   local source="$GENERATED_DIR/agents/$name"
-  local dest="$AGENTS_DIR/$name"
+  local dest_dir
   
   if [ ! -d "$source" ]; then
     error "Agent '$name' not found"
@@ -173,6 +226,14 @@ install_agent() {
   
   info "Installing agent: $name"
   echo "  Source: $source"
+  
+  if [ "$INTERACTIVE" = "true" ]; then
+    dest_dir=$(ask_destination "agent")
+  else
+    dest_dir="$AGENTS_DIR"
+  fi
+  
+  local dest="$dest_dir/$name"
   echo "  Destination: $dest"
   
   if [ -d "$dest" ] && [ "$FORCE" != "true" ]; then
@@ -199,7 +260,7 @@ install_agent() {
   rm -rf "$dest"
   cp -r "$source" "$dest"
   
-  info "✓ Agent '$name' installed successfully"
+  success "Agent '$name' installed to $dest_dir"
 }
 
 install_all() {
@@ -234,6 +295,7 @@ FORCE="false"
 VALIDATE="false"
 BACKUP="false"
 WATCH="false"
+INTERACTIVE="true"
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -255,6 +317,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --watch)
       WATCH="true"
+      shift
+      ;;
+    --non-interactive)
+      INTERACTIVE="false"
       shift
       ;;
     -h|--help)
