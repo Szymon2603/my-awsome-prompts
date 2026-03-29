@@ -242,6 +242,175 @@ class GeneratorSkill {
   validateSkillDefinition(definition) {
     return validateSkill(definition);
   }
+
+  generatePlan(input, options = {}) {
+    const name = options.name || this.generateName(input.description || input);
+    const description = input.description || input.goal || input;
+    const tools = options.allowedTools || this.detectTools(description);
+    const effort = options.effort || this.defaultEffort;
+    const constraints = options.constraints || [];
+    const context = options.context || 'inline';
+
+    return {
+      type: 'skill',
+      name: this.sanitizeName(name),
+      description: description.substring(0, 1024),
+      allowedTools: tools,
+      effort,
+      constraints,
+      context,
+      workflow: this.extractWorkflow(input.instructions || description),
+      checklists: this.extractChecklists(input.instructions || description),
+      instructions: input.instructions || description
+    };
+  }
+
+  validateFull(skillPath) {
+    const results = {
+      schema: { valid: false, errors: [] },
+      structure: { valid: false, errors: [] },
+      tools: { valid: false, warnings: [] }
+    };
+
+    const skillFile = path.join(skillPath, 'SKILL.md');
+    if (!fs.existsSync(skillFile)) {
+      results.structure.errors.push('SKILL.md not found');
+      return results;
+    }
+
+    const skillContent = fs.readFileSync(skillFile, 'utf8');
+    const frontmatterMatch = skillContent.match(/^---\n([\s\S]*?)\n---/);
+    
+    if (!frontmatterMatch) {
+      results.structure.errors.push('Frontmatter not found');
+      return results;
+    }
+
+    const frontmatter = this.parseFrontmatter(frontmatterMatch[1]);
+    const schemaValidation = validateSkill({
+      name: frontmatter.name,
+      description: frontmatter.description,
+      'allowed-tools': frontmatter['allowed-tools'],
+      model: frontmatter.model,
+      effort: frontmatter.effort,
+      context: frontmatter.context
+    });
+
+    results.schema = schemaValidation;
+
+    const requiredFiles = ['SKILL.md'];
+    const optionalFiles = ['reference.md', 'examples.md'];
+    
+    for (const file of requiredFiles) {
+      if (!fs.existsSync(path.join(skillPath, file))) {
+        results.structure.errors.push(`Required file missing: ${file}`);
+      }
+    }
+
+    for (const file of optionalFiles) {
+      if (!fs.existsSync(path.join(skillPath, file))) {
+        results.structure.warnings.push(`Optional file missing: ${file}`);
+      }
+    }
+
+    const validTools = ['Read', 'Grep', 'Glob', 'Bash', 'Edit', 'Write', 'WebFetch', 'WebSearch'];
+    for (const tool of frontmatter['allowed-tools'] || []) {
+      if (!validTools.includes(tool)) {
+        results.tools.warnings.push(`Unknown tool: ${tool}`);
+      }
+    }
+
+    results.structure.valid = results.structure.errors.length === 0;
+    results.tools.valid = results.tools.warnings.length === 0;
+
+    return results;
+  }
+
+  parseFrontmatter(frontmatterText) {
+    const result = {};
+    const lines = frontmatterText.split('\n');
+    let currentKey = null;
+    let currentArray = [];
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      
+      if (trimmed.startsWith('- ') && currentKey) {
+        currentArray.push(trimmed.substring(2).trim());
+      } else if (trimmed.match(/^(\w+):/)) {
+        if (currentKey) {
+          result[currentKey] = currentArray.length > 0 ? currentArray : result[currentKey];
+        }
+        const match = trimmed.match(/^(\w+):\s*(.*)$/);
+        currentKey = match[1];
+        const value = match[2].trim();
+        
+        if (value && !value.startsWith('[')) {
+          result[currentKey] = value;
+          currentKey = null;
+        } else {
+          currentArray = [];
+        }
+      }
+    }
+
+    if (currentKey) {
+      result[currentKey] = currentArray.length > 0 ? currentArray : result[currentKey];
+    }
+
+    return result;
+  }
+
+  async test(skillPath) {
+    const results = {
+      passed: false,
+      tests: [],
+      summary: { total: 0, passed: 0, failed: 0 }
+    };
+
+    const validationResults = this.validateFull(skillPath);
+    
+    results.tests.push({
+      name: 'JSON Schema Validation',
+      passed: validationResults.schema.valid,
+      message: validationResults.schema.valid ? 'Schema valid' : JSON.stringify(validationResults.schema.errors)
+    });
+
+    results.tests.push({
+      name: 'File Structure',
+      passed: validationResults.structure.valid,
+      message: validationResults.structure.valid ? 'All required files present' : validationResults.structure.errors.join(', ')
+    });
+
+    results.tests.push({
+      name: 'Tool Configuration',
+      passed: validationResults.tools.valid,
+      message: validationResults.tools.valid ? 'All tools valid' : validationResults.tools.warnings.join(', ')
+    });
+
+    results.summary.total = results.tests.length;
+    results.summary.passed = results.tests.filter(t => t.passed).length;
+    results.summary.failed = results.tests.filter(t => !t.passed).length;
+    results.passed = results.summary.failed === 0;
+
+    return results;
+  }
+
+  save(generated, outputPath) {
+    const skillDir = path.join(outputPath, 'skills', generated.metadata.name);
+    
+    fs.mkdirSync(skillDir, { recursive: true });
+    fs.writeFileSync(path.join(skillDir, 'SKILL.md'), generated.skill);
+
+    if (generated.reference) {
+      fs.writeFileSync(path.join(skillDir, 'reference.md'), generated.reference);
+    }
+    if (generated.examples) {
+      fs.writeFileSync(path.join(skillDir, 'examples.md'), generated.examples);
+    }
+
+    return skillDir;
+  }
 }
 
 module.exports = GeneratorSkill;

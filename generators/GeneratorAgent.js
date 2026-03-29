@@ -212,6 +212,159 @@ class GeneratorAgent {
       persona: value.persona
     }));
   }
+
+  generatePlan(input, options = {}) {
+    const name = options.name || this.generateName(input.description || input);
+    const description = input.description || input.goal || input;
+    const type = options.type || this.selectType(input);
+    const typeConfig = AGENT_TYPES[type] || AGENT_TYPES.general;
+    const tools = options.allowedTools || typeConfig.defaultTools;
+    const color = options.color || this.defaultColor;
+    const constraints = options.constraints || [];
+    const capabilities = options.capabilities || [];
+
+    return {
+      type: 'agent',
+      name: this.sanitizeName(name),
+      description: description.substring(0, 1024),
+      type,
+      allowedTools: tools,
+      color,
+      constraints,
+      capabilities,
+      persona: options.persona || typeConfig.persona,
+      responsibilities: options.responsibilities || this.generateResponsibilities(input, type),
+      guidelines: options.guidelines || typeConfig.guidelines,
+      autoTrigger: options.autoTrigger || null
+    };
+  }
+
+  validateFull(agentPath) {
+    const results = {
+      schema: { valid: false, errors: [] },
+      structure: { valid: false, errors: [] },
+      tools: { valid: false, warnings: [] }
+    };
+
+    const agentFile = path.join(agentPath, 'AGENT.md');
+    if (!fs.existsSync(agentFile)) {
+      results.structure.errors.push('AGENT.md not found');
+      return results;
+    }
+
+    const agentContent = fs.readFileSync(agentFile, 'utf8');
+    const frontmatterMatch = agentContent.match(/^---\n([\s\S]*?)\n---/);
+
+    if (!frontmatterMatch) {
+      results.structure.errors.push('Frontmatter not found');
+      return results;
+    }
+
+    const frontmatter = this.parseFrontmatter(frontmatterMatch[1]);
+    
+    const schemaValidation = validateAgent({
+      name: frontmatter.name,
+      description: frontmatter.description,
+      type: frontmatter.type,
+      'allowed-tools': frontmatter['allowed-tools'],
+      model: frontmatter.model,
+      color: frontmatter.color,
+      'auto-trigger': frontmatter['auto-trigger'] ? JSON.parse(frontmatter['auto-trigger']) : undefined
+    });
+
+    results.schema = schemaValidation;
+    results.structure.valid = results.structure.errors.length === 0;
+
+    const validTools = ['Read', 'Grep', 'Glob', 'Bash', 'Edit', 'Write', 'WebFetch', 'WebSearch', 'TodoWrite', 'Task'];
+    for (const tool of frontmatter['allowed-tools'] || []) {
+      if (!validTools.includes(tool)) {
+        results.tools.warnings.push(`Unknown tool: ${tool}`);
+      }
+    }
+
+    results.tools.valid = results.tools.warnings.length === 0;
+
+    return results;
+  }
+
+  parseFrontmatter(frontmatterText) {
+    const result = {};
+    const lines = frontmatterText.split('\n');
+    let currentKey = null;
+    let currentArray = [];
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      
+      if (trimmed.startsWith('- ') && currentKey) {
+        currentArray.push(trimmed.substring(2).trim());
+      } else if (trimmed.match(/^(\w+):/)) {
+        if (currentKey) {
+          result[currentKey] = currentArray.length > 0 ? currentArray : result[currentKey];
+        }
+        const match = trimmed.match(/^(\w+):\s*(.*)$/);
+        currentKey = match[1];
+        const value = match[2].trim();
+        
+        if (value && !value.startsWith('[')) {
+          result[currentKey] = value;
+          currentKey = null;
+        } else {
+          currentArray = [];
+        }
+      }
+    }
+
+    if (currentKey) {
+      result[currentKey] = currentArray.length > 0 ? currentArray : result[currentKey];
+    }
+
+    return result;
+  }
+
+  async test(agentPath) {
+    const results = {
+      passed: false,
+      tests: [],
+      summary: { total: 0, passed: 0, failed: 0 }
+    };
+
+    const validationResults = this.validateFull(agentPath);
+    
+    results.tests.push({
+      name: 'JSON Schema Validation',
+      passed: validationResults.schema.valid,
+      message: validationResults.schema.valid ? 'Schema valid' : JSON.stringify(validationResults.schema.errors)
+    });
+
+    results.tests.push({
+      name: 'File Structure',
+      passed: validationResults.structure.valid,
+      message: validationResults.structure.valid ? 'AGENT.md present' : validationResults.structure.errors.join(', ')
+    });
+
+    results.tests.push({
+      name: 'Tool Configuration',
+      passed: validationResults.tools.valid,
+      message: validationResults.tools.valid ? 'All tools valid' : validationResults.tools.warnings.join(', ')
+    });
+
+    results.summary.total = results.tests.length;
+    results.summary.passed = results.tests.filter(t => t.passed).length;
+    results.summary.failed = results.tests.filter(t => !t.passed).length;
+    results.passed = results.summary.failed === 0;
+
+    return results;
+  }
+
+  save(generated, outputPath) {
+    const agentDir = path.join(outputPath, 'agents', generated.metadata.name);
+    
+    fs.mkdirSync(agentDir, { recursive: true });
+    fs.writeFileSync(path.join(agentDir, 'AGENT.md'), generated.agent);
+
+    return agentDir;
+  }
 }
 
 module.exports = GeneratorAgent;

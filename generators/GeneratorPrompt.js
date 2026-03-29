@@ -210,6 +210,106 @@ class GeneratorPrompt {
       tone: value.tone
     }));
   }
+
+  generatePlan(brief, options = {}) {
+    const name = options.name || this.generateName(brief.goal);
+    const type = options.type || brief.type || 'system_prompt';
+    const domain = brief.domain || options.domain || this.defaultDomain;
+    const style = brief.style || options.style || this.defaultStyle;
+    const constraints = brief.constraints || [];
+
+    const typeConfig = TYPES.types[type] || TYPES.types.system_prompt;
+    const domainConfig = TYPES.domains[domain] || TYPES.domains.general;
+
+    return {
+      type: 'prompt',
+      name,
+      goal: brief.goal,
+      domain,
+      style,
+      type,
+      constraints,
+      persona: this.generatePersona({ domain }, domainConfig),
+      guidelines: this.generateGuidelines({ domain }, domainConfig, typeConfig),
+      capabilities: this.generateCapabilities({ domain }, domainConfig),
+      examples: brief.examples || []
+    };
+  }
+
+  generateName(goal) {
+    const words = goal.toLowerCase()
+      .replace(/[^a-z0-9\s]/g, '')
+      .split(/\s+/)
+      .filter(w => w.length > 2)
+      .slice(0, 4);
+    return words.join('-');
+  }
+
+  validateFull(promptPath) {
+    const results = {
+      structure: { valid: false, errors: [] },
+      content: { valid: false, warnings: [] }
+    };
+
+    if (!fs.existsSync(promptPath)) {
+      results.structure.errors.push('Prompt file not found');
+      return results;
+    }
+
+    const promptContent = fs.readFileSync(promptPath, 'utf8');
+    
+    if (promptContent.length < 50) {
+      results.content.warnings.push('Prompt content is very short');
+    }
+
+    if (!promptContent.includes('#') && !promptContent.startsWith('You are')) {
+      results.content.warnings.push('Missing proper prompt structure');
+    }
+
+    results.structure.valid = results.structure.errors.length === 0;
+    results.content.valid = results.content.warnings.length === 0;
+
+    return results;
+  }
+
+  async test(promptPath) {
+    const results = {
+      passed: false,
+      tests: [],
+      summary: { total: 0, passed: 0, failed: 0 }
+    };
+
+    const validationResults = this.validateFull(promptPath);
+    
+    results.tests.push({
+      name: 'File Exists',
+      passed: fs.existsSync(promptPath),
+      message: fs.existsSync(promptPath) ? 'Prompt file exists' : 'Prompt file not found'
+    });
+
+    results.tests.push({
+      name: 'Content Structure',
+      passed: validationResults.content.valid,
+      message: validationResults.content.valid ? 'Content looks good' : validationResults.content.warnings.join(', ')
+    });
+
+    results.summary.total = results.tests.length;
+    results.summary.passed = results.tests.filter(t => t.passed).length;
+    results.summary.failed = results.tests.filter(t => !t.passed).length;
+    results.passed = results.summary.failed === 0;
+
+    return results;
+  }
+
+  save(prompt, outputPath, name) {
+    const promptDir = path.join(outputPath, 'prompts');
+    const promptFile = path.join(promptDir, `${name}.md`);
+    
+    fs.mkdirSync(promptDir, { recursive: true });
+    fs.writeFileSync(promptFile, prompt);
+
+    return promptFile;
+  }
 }
 
 module.exports = GeneratorPrompt;

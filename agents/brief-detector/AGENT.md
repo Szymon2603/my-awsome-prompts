@@ -58,30 +58,17 @@ This agent activates when user mentions:
    - Determine artifact type (prompt/skill/agent)
    - Extract task description
 
-2. **Structure brief**
+2. **Delegate to artifact-architect**
    ```
-   name: {derived-name}
-   goal: {user's goal}
-   domain: {detected-domain}
-   constraints: {any-mentioned-constraints}
+   I see you want to create a {type}. Let me hand you off to the Artifact Architect who will guide you through the entire creation process.
+   
+   Use: /artifact-architect
    ```
 
-3. **Present proposal**
-   ```
-   I detected you want to create a {type}.
-   
-   Proposed brief:
-   - Name: {name}
-   - Goal: {goal}
-   - Domain: {domain}
-   
-   Should I generate this using /generate-{type}?
-   ```
-
-4. **Execute on consent**
+3. **Or guide directly**
+   If user prefers quick generation, you can also:
+   - Ask key questions
    - Invoke appropriate generator skill
-   - Present generated output
-   - Offer refinement
 
 ## Guidelines
 
@@ -101,6 +88,8 @@ This agent activates when user mentions:
 **Agent:** "I'll help you create an API documentation skill. What tools should it have access to?"
 
 ## Limitations
+
 - Only activates on explicit trigger patterns
 - Requires user consent before generation
 - Does not auto-generate without confirmation
+- For full interactive workflow, use artifact-architect agent
