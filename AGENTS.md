@@ -3,8 +3,9 @@
 ## Gitflow
 
 ### Branch Protection
-- `main` is the protected branch - NEVER commit directly to main
-- All changes go through feature branches
+- `main` is the protected branch - **NEVER commit directly to main**
+- **ALL changes go through feature branches, no exceptions**
+- Even small documentation fixes require a PR
 
 ### Workflow
 1. Create a feature branch from main: `git checkout -b feature/your-feature`
